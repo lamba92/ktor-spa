@@ -8,14 +8,12 @@ import io.ktor.server.tomcat.Tomcat
 
 fun main(args: Array<String>) {
     embeddedServer(Tomcat, port = 8000, host = "127.0.0.1"){
-//        install(SinglePageApplication){
-//            //ignoreIfContains = Regex("\\..*$")
-//        }
+        install(SinglePageApplication){
+            //ignoreIfContains = Regex("\\..*$")
+        }
         routing {
             static {
                 resources()
-                defaultResource("index.html")
-                default("")
             }
         }
     }.start(true)

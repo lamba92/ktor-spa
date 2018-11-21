@@ -6,7 +6,6 @@ import io.ktor.application.ApplicationFeature
 import io.ktor.application.call
 import io.ktor.http.content.resolveResource
 import io.ktor.request.uri
-import io.ktor.response.ApplicationSendPipeline
 import io.ktor.response.respond
 import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelineContext
@@ -25,11 +24,11 @@ class SinglePageApplication(private val configuration: Configuration) {
             val configuration = Configuration().apply(configure)
             val feature = SinglePageApplication(configuration)
 
-            pipeline.sendPipeline.intercept(ApplicationSendPipeline.After){ message ->
+            pipeline.intercept(ApplicationCallPipeline.Fallback){
                 val requestUrl = call.request.uri
                 val regex = configuration.ignoreIfContains
                 if(regex == null || !requestUrl.contains(regex))
-                    feature.intercept(this, message)
+                    feature.intercept(this)
             }
 
             return feature
@@ -38,11 +37,11 @@ class SinglePageApplication(private val configuration: Configuration) {
     }
 
     private suspend fun intercept(
-        pipelineContext: PipelineContext<Any, ApplicationCall>,
-        message: Any
+        pipelineContext: PipelineContext<Unit, ApplicationCall>
     ) = pipelineContext.apply {
-        val index = call.resolveResource(configuration.defaultPage) ?: throw FileNotFoundException("${configuration.defaultPage} not found")
-        call.respond(index)
+        val indexPageApplication = call.resolveResource(configuration.defaultPage)
+            ?: throw FileNotFoundException("${configuration.defaultPage} not found")
+        call.respond(indexPageApplication)
         finish()
     }
 

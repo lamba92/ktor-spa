@@ -39,7 +39,7 @@ install(SinglePageApplication){
 
 **All the routes you set up in your Ktor application have higher priority and will shadow eventual SPA routes so keep that in mind.** 
 
-#### Under the hood
+## Under the hood
 
 The feature you install intercepts all 404s not intercepted by the router and instead of responding an HTTP 404 it serves the `index.html` (or whatever you called it) with an HTTP 200 status.
 

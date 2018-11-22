@@ -6,7 +6,6 @@ val kotlinVersion: String by project
 val logbackVersion: String by project
 
 plugins {
-    application
     maven
     kotlin("jvm") version "1.3.10"
 }
@@ -25,3 +24,12 @@ dependencies {
     testCompile("io.ktor:ktor-server-tomcat:$ktorVersion")
     testCompile("io.ktor:ktor-server-tests:$ktorVersion")
 }
+
+val sourcesJar by tasks.creating(Jar::class) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Assembles sources JAR"
+    classifier = "sources"
+    from(sourceSets.getAt("main").allSource)
+}
+
+artifacts.add("archives", sourcesJar)

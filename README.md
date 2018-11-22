@@ -22,7 +22,7 @@ install(SinglePageApplication){
     // inside bundled resources or current working directory
     folderPath = "not/root/folder/"
     
-    // The url ath wich tour spa should be served. This
+    // The url at which tour spa should be served. This
     // is usefull if you want to serve a spa not at the
     // root of your website
     spaRoute = "/something"

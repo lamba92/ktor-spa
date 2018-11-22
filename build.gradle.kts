@@ -7,11 +7,12 @@ val logbackVersion: String by project
 
 plugins {
     application
+    maven
     kotlin("jvm") version "1.3.10"
 }
 
-group = "ktor-spa"
-version = "0.0.1"
+group = "it.lamba"
+version = "1.0"
 
 repositories {
     mavenLocal()
@@ -20,9 +21,7 @@ repositories {
 }
 
 dependencies {
-    compile(kotlin("stdlib"))
-    compile("io.ktor:ktor-server-tomcat:$ktorVersion")
-    compile("ch.qos.logback:logback-classic:$logbackVersion")
+    compile("io.ktor:ktor-server-core:$ktorVersion")
+    testCompile("io.ktor:ktor-server-tomcat:$ktorVersion")
     testCompile("io.ktor:ktor-server-tests:$ktorVersion")
 }
-

@@ -55,6 +55,7 @@ class SinglePageApplication(private val configuration: Configuration) {
         pipelineContext: PipelineContext<Any, ApplicationCall>,
         message: Any
     ) = pipelineContext.apply {
+
         if (call.attributes.contains(StatusPages.key)) return@apply
 
         val is404 = if(message is HttpStatusCodeContent)

@@ -7,10 +7,13 @@ import io.ktor.http.content.*
 import io.ktor.request.uri
 import io.ktor.response.ApplicationSendPipeline
 import io.ktor.response.respond
+import io.ktor.response.respondFile
 import io.ktor.routing.routing
 import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelineContext
+import java.io.File
 import java.io.FileNotFoundException
+import java.nio.file.Paths
 
 /**
  * The SPA configuration class.
@@ -65,14 +68,25 @@ class SinglePageApplication(private val configuration: Configuration) {
 
         if (is404) {
             call.attributes.put(key, this@SinglePageApplication)
-            val indexPageApplication = call.resolveResource(configuration.defaultPage)
-                ?: throw FileNotFoundException("${configuration.defaultPage} not found")
-            call.respond(indexPageApplication)
+
+            if(configuration.useFiles) {
+                val file = configuration.fullPath().toFile()
+                if(file.notExists()) throw FileNotFoundException("${configuration.fullPath()} not found")
+                call.respondFile(file, configuration.defaultPage)
+            } else {
+                val indexPageApplication = call.resolveResource(configuration.fullPath().toString())
+                        ?: throw FileNotFoundException("${configuration.fullPath()} not found")
+                call.respond(indexPageApplication)
+            }
             finish()
         }
     }
 
     data class Configuration(var defaultPage: String = "index.html", var ignoreIfContains: Regex? = null,
-                             var folderPath: String = "", var useFiles: Boolean = false, var spaRoute: String = "")
+                             var folderPath: String = "", var useFiles: Boolean = false, var spaRoute: String = ""){
+        fun fullPath() = Paths.get(folderPath, defaultPage)!!
+    }
 
 }
+
+fun File.notExists() = !exists()

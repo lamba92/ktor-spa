@@ -6,6 +6,7 @@ import io.ktor.client.call.call
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.request.port
 import io.ktor.client.response.readBytes
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.tomcat.Tomcat
 import it.lamba.utils.getResource
@@ -36,17 +37,31 @@ class Tests {
     @Test
     fun testResources() = runBlocking {
         resourceServer.start()
+
+        val expect404Response = httpClient
+            .call("http://$serverAddress"){ port = serverPort }
+            .response.status
+        assertEquals(HttpStatusCode.NotFound.value, expect404Response.value)
+
         val mainPage = getResource("$folderPath/$defaultPage").readText()
         val mainPageResponse = httpClient
-            .call("http://$serverAddress/$spaRoute"){ port = 8080 }
+            .call("http://$serverAddress/$spaRoute"){ port = serverPort }
             .response
             .readBytes()
             .let { String(it) }
         assertEquals(mainPage, mainPageResponse)
 
+        val mainPage2 = getResource("$folderPath/$defaultPage").readText()
+        val mainPageResponse2 = httpClient
+            .call("http://$serverAddress/$spaRoute/LOLOL"){ port = serverPort }
+            .response
+            .readBytes()
+            .let { String(it) }
+        assertEquals(mainPage2, mainPageResponse2)
+
         val staticResource = getResource("$folderPath/static/test.html").readText()
         val staticResourceResponse = httpClient
-            .call("http://$serverAddress/$spaRoute/static/test.html"){ port = 8080 }
+            .call("http://$serverAddress/$spaRoute/static/test.html"){ port = serverPort }
             .response
             .readBytes()
             .let { String(it) }

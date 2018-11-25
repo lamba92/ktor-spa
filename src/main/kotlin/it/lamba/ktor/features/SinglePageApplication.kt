@@ -13,6 +13,7 @@ import io.ktor.util.AttributeKey
 import io.ktor.util.pipeline.PipelineContext
 import java.io.File
 import java.io.FileNotFoundException
+import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
@@ -45,7 +46,9 @@ class SinglePageApplication(private val configuration: Configuration) {
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) { message ->
                 val requestUrl = call.request.uri
                 val regex = feature.configuration.ignoreIfContains
-                if (regex == null || !requestUrl.contains(regex))
+                if ((regex == null || requestUrl.notContains(regex))
+                    && (requestUrl.startsWith(feature.configuration.spaRoute)
+                            || requestUrl.startsWith("/${feature.configuration.spaRoute}")))
                     feature.intercept(this, message)
             }
 
@@ -89,4 +92,5 @@ class SinglePageApplication(private val configuration: Configuration) {
 
 }
 
+fun String.notContains(regex: Regex) = !contains(regex)
 fun File.notExists() = !exists()

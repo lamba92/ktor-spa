@@ -10,7 +10,7 @@ Just install the feature in your application with:
 install(SinglePageApplication)
 ```
 
-By default the app is served from the root folder of bundled resources with `index.html` as served main page. You can customize stuff like so:
+By default the app is served from the root folder of bundled resources with `index.html` as main page. You can customize stuff like so:
 
 ```
 install(SinglePageApplication){
@@ -41,7 +41,7 @@ install(SinglePageApplication){
 
 ## Under the hood
 
-The feature you install intercepts all 404s not intercepted by the router and instead of responding an HTTP 404 it serves the `index.html` (or whatever you called it) with an HTTP 200 status.
+The feature intercepts all 404s not intercepted by the router and instead of responding an HTTP 404 it serves the `index.html` (or whatever you called it) with HTTP 200 status.
 
 **NB**: Remember to setup a 404 in your spa!
 

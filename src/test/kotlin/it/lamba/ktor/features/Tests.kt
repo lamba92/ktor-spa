@@ -4,8 +4,11 @@ import io.ktor.application.install
 import io.ktor.client.HttpClient
 import io.ktor.client.call.call
 import io.ktor.client.engine.apache.Apache
+import io.ktor.client.request.headers
 import io.ktor.client.request.port
 import io.ktor.client.response.readBytes
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.tomcat.Tomcat
@@ -42,6 +45,16 @@ class Tests {
             .call("http://$serverAddress"){ port = serverPort }
             .response.status
         assertEquals(HttpStatusCode.NotFound.value, expect404Response.value)
+
+        val expect404Response2 = httpClient
+            .call("http://$serverAddress/$spaRoute"){
+                port = serverPort
+                headers {
+                    set(HttpHeaders.Accept, ContentType.Application.Json.toString())
+                }
+            }
+            .response.status
+        assertEquals(HttpStatusCode.NotFound.value, expect404Response2.value)
 
         val mainPage = getResource("$folderPath/$defaultPage").readText()
         val mainPageResponse = httpClient

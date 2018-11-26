@@ -2,10 +2,13 @@ package it.lamba.ktor.features
 
 import io.ktor.application.*
 import io.ktor.features.StatusPages
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.*
+import io.ktor.request.acceptItems
 import io.ktor.request.uri
 import io.ktor.response.ApplicationSendPipeline
+import io.ktor.response.contentType
 import io.ktor.response.respond
 import io.ktor.response.respondFile
 import io.ktor.routing.routing
@@ -69,20 +72,26 @@ class SinglePageApplication(private val configuration: Configuration) {
         else
             false
 
-        if (is404) {
-            call.attributes.put(key, this@SinglePageApplication)
+        if(!is404) return@apply
 
-            if(configuration.useFiles) {
-                val file = configuration.fullPath().toFile()
-                if(file.notExists()) throw FileNotFoundException("${configuration.fullPath()} not found")
-                call.respondFile(file, configuration.defaultPage)
-            } else {
-                val indexPageApplication = call.resolveResource(configuration.fullPath().toString())
-                        ?: throw FileNotFoundException("${configuration.fullPath()} not found")
-                call.respond(indexPageApplication)
-            }
-            finish()
+        val acceptsHtml = call.request.acceptItems().any {
+            ContentType.Text.Html.match(it.value)
         }
+
+        if(!acceptsHtml) return@apply
+
+        call.attributes.put(key, this@SinglePageApplication)
+
+        if(configuration.useFiles) {
+            val file = configuration.fullPath().toFile()
+            if(file.notExists()) throw FileNotFoundException("${configuration.fullPath()} not found")
+            call.respondFile(file, configuration.defaultPage)
+        } else {
+            val indexPageApplication = call.resolveResource(configuration.fullPath().toString())
+                ?: throw FileNotFoundException("${configuration.fullPath()} not found")
+            call.respond(indexPageApplication)
+        }
+        finish()
     }
 
     data class Configuration(var defaultPage: String = "index.html", var ignoreIfContains: Regex? = null,

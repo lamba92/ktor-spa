@@ -72,13 +72,11 @@ class SinglePageApplication(private val configuration: Configuration) {
         else
             false
 
-        if(!is404) return@apply
-
         val acceptsHtml = call.request.acceptItems().any {
             ContentType.Text.Html.match(it.value)
         }
 
-        if(!acceptsHtml) return@apply
+        if(!is404 || !acceptsHtml) return@apply
 
         call.attributes.put(key, this@SinglePageApplication)
 

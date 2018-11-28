@@ -39,7 +39,7 @@ class SinglePageApplication(private val configuration: Configuration) {
 
             pipeline.routing {
                 static(feature.configuration.spaRoute) {
-                    if(feature.configuration.useFiles)
+                    if (feature.configuration.useFiles)
                         files(feature.configuration.folderPath)
                     else
                         resources(feature.configuration.folderPath)
@@ -47,12 +47,7 @@ class SinglePageApplication(private val configuration: Configuration) {
             }
 
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) { message ->
-                val requestUrl = call.request.uri
-                val regex = feature.configuration.ignoreIfContains
-                if ((regex == null || requestUrl.notContains(regex))
-                    && (requestUrl.startsWith(feature.configuration.spaRoute)
-                            || requestUrl.startsWith("/${feature.configuration.spaRoute}")))
-                    feature.intercept(this, message)
+                feature.intercept(this, message)
             }
 
             return feature
@@ -65,24 +60,33 @@ class SinglePageApplication(private val configuration: Configuration) {
         message: Any
     ) = pipelineContext.apply {
 
-        if (call.attributes.contains(StatusPages.key)) return@apply
-
-        val is404 = if(message is HttpStatusCodeContent)
-            message.status == HttpStatusCode.NotFound
-        else
-            false
-
-        val acceptsHtml = call.request.acceptItems().any {
-            ContentType.Text.Html.match(it.value)
+        val requestUrl = call.request.uri
+        val regex = configuration.ignoreIfContains
+        val stop by lazy {
+            !((regex == null || requestUrl.notContains(regex))
+                    && (requestUrl.startsWith(configuration.spaRoute)
+                    || requestUrl.startsWith("/${configuration.spaRoute}")))
+        }
+        val is404 by lazy {
+            if (message is HttpStatusCodeContent)
+                message.status == HttpStatusCode.NotFound
+            else
+                false
+        }
+        val acceptsHtml by lazy {
+            call.request.acceptItems().any {
+                ContentType.Text.Html.match(it.value)
+            }
         }
 
-        if(!is404 || !acceptsHtml) return@apply
+        if (call.attributes.contains(StatusPages.key) || stop || !is404 || !acceptsHtml)
+            return@apply
 
         call.attributes.put(key, this@SinglePageApplication)
 
-        if(configuration.useFiles) {
+        if (configuration.useFiles) {
             val file = configuration.fullPath().toFile()
-            if(file.notExists()) throw FileNotFoundException("${configuration.fullPath()} not found")
+            if (file.notExists()) throw FileNotFoundException("${configuration.fullPath()} not found")
             call.respondFile(file, configuration.defaultPage)
         } else {
             val indexPageApplication = call.resolveResource(configuration.fullPath().toString())
@@ -92,8 +96,13 @@ class SinglePageApplication(private val configuration: Configuration) {
         finish()
     }
 
-    data class Configuration(var defaultPage: String = "index.html", var ignoreIfContains: Regex? = null,
-                             var folderPath: String = "", var useFiles: Boolean = false, var spaRoute: String = ""){
+    data class Configuration(
+        var spaRoute: String = "",
+        var useFiles: Boolean = false,
+        var folderPath: String = "",
+        var defaultPage: String = "index.html",
+        var ignoreIfContains: Regex? = null
+    ) {
         fun fullPath() = Paths.get(folderPath, defaultPage)!!
     }
 

@@ -2,6 +2,8 @@
 
 Installable feature to handle SPAs easily in Ktor!
 
+Written in Kotlin with ❤️
+
 ## Usage
 
 Just install the feature in your application with:

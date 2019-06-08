@@ -8,13 +8,13 @@ Written in Kotlin with ❤️
 
 Just install the feature in your application with:
 
-```
+```kotlin
 install(SinglePageApplication)
 ```
 
 By default the app is served from the root folder of bundled resources with `index.html` as main page. You can customize stuff like so:
 
-```
+```kotlin
 install(SinglePageApplication){
 
     // main page file name to be served
@@ -50,7 +50,7 @@ The feature intercepts all 404s not intercepted by the router and instead of res
 ## Install [![](https://jitpack.io/v/lamba92/ktor-spa.svg)](https://jitpack.io/#lamba92/ktor-spa)
 
 Add the [JitPack.io](http://jitpack.io) repository to the project `build.grade`:
-```
+```groovy
 repositories {
     maven { url 'https://jitpack.io' }
 }
@@ -58,14 +58,14 @@ repositories {
 
 Then import the latest version in the `build.gradle` of the modules you need:
 
-```
+```groovy
 dependencies {
     implementation 'com.github.lamba92:ktor-spa:{latest_version}'
 }
 ```
 
 If using Gradle Kotlin DSL:
-```
+```kotlin
 repositories {
     maven(url = "https://jitpack.io")
 }
@@ -75,7 +75,7 @@ dependencies {
 }
 ```
 For Maven:
-```
+```xml
 <repositories>
    <repository>
       <id>jitpack.io</id>

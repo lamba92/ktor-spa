@@ -87,7 +87,7 @@ class SinglePageApplication(private val configuration: Configuration) {
         if (configuration.useFiles) {
             val file = configuration.fullPath().toFile()
             if (file.notExists()) throw FileNotFoundException("${configuration.fullPath()} not found")
-            call.respondFile(file, configuration.defaultPage)
+            call.respondFile(File(configuration.folderPath), configuration.defaultPage)
         } else {
             val indexPageApplication = call.resolveResource(configuration.fullPath().toString())
                 ?: throw FileNotFoundException("${configuration.fullPath()} not found")

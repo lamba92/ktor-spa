@@ -24,8 +24,7 @@ import java.nio.file.Paths
  */
 class SinglePageApplication(private val configuration: Configuration) {
 
-    companion object Feature :
-        ApplicationFeature<Application, Configuration, SinglePageApplication> {
+    companion object Feature : ApplicationFeature<Application, Configuration, SinglePageApplication> {
 
         override val key = AttributeKey<SinglePageApplication>("SinglePageApplication")
 
@@ -44,6 +43,7 @@ class SinglePageApplication(private val configuration: Configuration) {
                         resources(feature.configuration.folderPath)
                 }
             }
+
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) { message ->
                 feature.intercept(this, message)
             }
@@ -105,6 +105,3 @@ class SinglePageApplication(private val configuration: Configuration) {
     }
 
 }
-
-fun String.notContains(regex: Regex) = !contains(regex)
-fun File.notExists() = !exists()

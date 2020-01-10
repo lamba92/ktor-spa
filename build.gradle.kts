@@ -40,9 +40,7 @@ kotlin {
 
         val jvmTest by getting {
             dependencies {
-                implementation("io.ktor:ktor-server-tomcat:$ktorVersion")
                 implementation("io.ktor:ktor-server-tests:$ktorVersion")
-                implementation("io.ktor:ktor-client-apache:$ktorVersion")
                 implementation("com.github.lamba92:kresourceloader:$resourceLoaderVersion")
             }
         }

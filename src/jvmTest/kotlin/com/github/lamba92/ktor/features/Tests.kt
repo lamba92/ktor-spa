@@ -31,24 +31,24 @@ class Tests {
             }
         }, test)
 
-    private fun defaultSPATest(url: String = "/", tests: TestApplicationCall.() -> Unit) =
+    private fun defaultTest(url: String = "/", tests: TestApplicationCall.() -> Unit) =
         withSPATestApplication {
             with(handleRequest(Get, url), tests)
         }
 
     @Test
-    fun `root address 404`() = defaultSPATest {
+    fun `root address 404`() = defaultTest {
         assertEquals(HttpStatusCode.NotFound, response.status())
     }
 
     @Test
-    fun `spa root 200`() = defaultSPATest("/$spaRoute") {
+    fun `spa root 200`() = defaultTest("/$spaRoute") {
         assertEquals(HttpStatusCode.OK, response.status())
         assertEquals(getResource("spa/lol.html").readText(), response.content)
     }
 
     @Test
-    fun `existing resource`() = defaultSPATest("/$spaRoute/static/test.html") {
+    fun `existing resource`() = defaultTest("/$spaRoute/static/test.html") {
         assertEquals(HttpStatusCode.OK, response.status())
         assertEquals(getResource("spa/static/test.html").readText(), response.content)
     }

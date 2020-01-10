@@ -44,9 +44,6 @@ class SinglePageApplication(private val configuration: Configuration) {
                         resources(feature.configuration.folderPath)
                 }
             }
-            pipeline.sendPipeline.intercept(ApplicationSendPipeline.Before) { message ->
-                pipeline.log.debug("TEST $message")
-            }
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) { message ->
                 feature.intercept(this, message)
             }

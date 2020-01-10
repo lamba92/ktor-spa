@@ -15,9 +15,9 @@ before_install:
   - source ~/.install-jdk-travis.sh
 
 before_script:
-  - chmod +x gradlew --console=plain
+  - chmod +x gradlew
 
-script: ./gradlew check
+script: ./gradlew check --console=plain
 
 deploy:
   provider: script

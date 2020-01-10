@@ -8,7 +8,6 @@ import io.ktor.http.content.*
 import io.ktor.request.acceptItems
 import io.ktor.request.uri
 import io.ktor.response.ApplicationSendPipeline
-import io.ktor.response.contentType
 import io.ktor.response.respond
 import io.ktor.response.respondFile
 import io.ktor.routing.routing
@@ -26,7 +25,7 @@ import java.nio.file.Paths
 class SinglePageApplication(private val configuration: Configuration) {
 
     companion object Feature :
-        ApplicationFeature<Application, SinglePageApplication.Configuration, SinglePageApplication> {
+        ApplicationFeature<Application, Configuration, SinglePageApplication> {
 
         override val key = AttributeKey<SinglePageApplication>("SinglePageApplication")
 
@@ -45,7 +44,9 @@ class SinglePageApplication(private val configuration: Configuration) {
                         resources(feature.configuration.folderPath)
                 }
             }
-
+            pipeline.sendPipeline.intercept(ApplicationSendPipeline.Before) { message ->
+                pipeline.log.debug("TEST $message")
+            }
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) { message ->
                 feature.intercept(this, message)
             }
@@ -103,7 +104,7 @@ class SinglePageApplication(private val configuration: Configuration) {
         var defaultPage: String = "index.html",
         var ignoreIfContains: Regex? = null
     ) {
-        fun fullPath() = Paths.get(folderPath, defaultPage)!!
+        fun fullPath(): Path = Paths.get(folderPath, defaultPage)
     }
 
 }

@@ -1,8 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-val ktorVersion: String by project
-
 plugins {
     maven
     kotlin("jvm")
@@ -18,17 +13,21 @@ repositories {
 }
 
 dependencies {
-    compile("io.ktor:ktor-server-core:$ktorVersion")
-    testCompile("io.ktor:ktor-server-tomcat:$ktorVersion")
-    testCompile("io.ktor:ktor-server-tests:$ktorVersion")
-    testCompile("io.ktor:ktor-client-apache:$ktorVersion")
-    testCompile("com.github.lamba92", "kresourceloader", "1.1")
+
+    val ktorVersion: String by project
+
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-tomcat:$ktorVersion")
+    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-apache:$ktorVersion")
+    testImplementation("com.github.lamba92", "kresourceloader", "1.1")
+
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles sources JAR"
-    classifier = "sources"
+    archiveClassifier.set("sources")
     from(sourceSets.getAt("main").allSource)
 }
 

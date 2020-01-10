@@ -1,4 +1,4 @@
-package it.lamba.ktor.features
+package com.github.lamba92.ktor.features
 
 import io.ktor.application.*
 import io.ktor.features.StatusPages

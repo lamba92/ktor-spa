@@ -1,7 +1,4 @@
-language: java
-
-jdk:
-  - oraclejdk8
+language: bash
 
 cache:
   directories:

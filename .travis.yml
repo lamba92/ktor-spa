@@ -7,6 +7,16 @@ cache:
   directories:
     - $HOME/.gradle
 
+env:
+  global:
+    - GRAVIS="https://raw.githubusercontent.com/DanySK/Gravis-CI/master/"
+    - JDK="adopt@1.8"
+    - ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
+
+before_install:
+  - curl "${GRAVIS}.install-jdk-travis.sh" --output ~/.install-jdk-travis.sh
+  - source ~/.install-jdk-travis.sh
+
 before_script:
   - chmod +x gradlew --console=plain
 

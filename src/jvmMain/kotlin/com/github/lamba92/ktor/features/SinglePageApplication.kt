@@ -46,12 +46,12 @@ class SinglePageApplication(private val configuration: Configuration) {
 
             pipeline.intercept(ApplicationCallPipeline.Fallback) {
                 if (call.response.status() == null) {
-                    call.respond(HttpStatusCode.NotFound)
+                    call.respond(HttpStatusCodeContent(HttpStatusCode.NotFound))
                     finish()
                 }
             }
 
-            pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) { message ->
+            pipeline.sendPipeline.intercept(ApplicationSendPipeline.Before) { message ->
                 feature.intercept(this, message)
             }
 
@@ -63,7 +63,7 @@ class SinglePageApplication(private val configuration: Configuration) {
     private suspend fun intercept(
         pipelineContext: PipelineContext<Any, ApplicationCall>,
         message: Any
-    ) = pipelineContext.apply {
+    ) = with(pipelineContext) context@{
 
         val requestUrl = call.request.uri
         val regex = configuration.ignoreIfContains
@@ -85,7 +85,7 @@ class SinglePageApplication(private val configuration: Configuration) {
         }
 
         if (call.attributes.contains(StatusPages.key) || stop || !is404 || !acceptsHtml)
-            return@apply
+            return@context
 
         call.attributes.put(key, this@SinglePageApplication)
 

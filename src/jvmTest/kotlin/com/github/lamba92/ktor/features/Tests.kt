@@ -2,6 +2,8 @@ package com.github.lamba92.ktor.features
 
 import io.ktor.application.install
 import io.ktor.features.CallLogging
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.TestApplicationCall
@@ -33,7 +35,9 @@ class Tests {
 
     private fun defaultTest(url: String = "/", tests: TestApplicationCall.() -> Unit) =
         withSPATestApplication {
-            with(handleRequest(Get, url), tests)
+            with(handleRequest(Get, url) {
+                addHeader(HttpHeaders.Accept, ContentType.Text.Html.toString())
+            }, tests)
         }
 
     @Test

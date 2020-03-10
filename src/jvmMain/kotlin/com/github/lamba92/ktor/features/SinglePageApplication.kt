@@ -44,6 +44,13 @@ class SinglePageApplication(private val configuration: Configuration) {
                 }
             }
 
+            pipeline.intercept(ApplicationCallPipeline.Fallback) {
+                if (call.response.status() == null) {
+                    call.respond(HttpStatusCode.NotFound)
+                    finish()
+                }
+            }
+
             pipeline.sendPipeline.intercept(ApplicationSendPipeline.After) { message ->
                 feature.intercept(this, message)
             }

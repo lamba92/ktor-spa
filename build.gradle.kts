@@ -4,9 +4,8 @@ import com.jfrog.bintray.gradle.BintrayExtension
 import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 
 plugins {
-    maven
     kotlin("multiplatform")
-    id("maven-publish")
+    `maven-publish`
     id("com.jfrog.bintray")
 }
 

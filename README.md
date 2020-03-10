@@ -1,5 +1,4 @@
-# Ktor Single Page Application Feature [![Build Status](https://travis-ci.org/lamba92/ktor-spa.svg?branch=master)](https://travis-ci.org/lamba92/ktor-spa) [![](https://jitpack.io/v/lamba92/ktor-spa.svg)](https://jitpack.io/#lamba92/ktor-spa)
-
+# Ktor Single Page Application Feature [![Build Status](https://travis-ci.org/lamba92/ktor-spa.svg?branch=master)](https://travis-ci.org/lamba92/ktor-spa) [ ![Download](https://api.bintray.com/packages/lamba92/com.github.lamba92/ktor-spa/images/download.svg) ](https://bintray.com/lamba92/com.github.lamba92/ktor-spa/_latestVersion)
 Installable feature to handle SPAs easily in Ktor!
 
 Written in Kotlin with ❤️
@@ -47,45 +46,16 @@ The feature intercepts all 404s not intercepted by the router and instead of res
 
 **NB**: Remember to setup a 404 in your spa!
 
-## Install [![](https://jitpack.io/v/lamba92/ktor-spa.svg)](https://jitpack.io/#lamba92/ktor-spa)
-
-Add the [JitPack.io](http://jitpack.io) repository to the project `build.grade`:
-```groovy
-repositories {
-    maven { url 'https://jitpack.io' }
-}
-```
-
-Then import the latest version in the `build.gradle` of the modules you need:
-
-```groovy
-dependencies {
-    implementation 'com.github.lamba92:ktor-spa:{latest_version}'
-}
-```
+## Install [ ![Download](https://api.bintray.com/packages/lamba92/com.github.lamba92/ktor-spa/images/download.svg) ](https://bintray.com/lamba92/com.github.lamba92/ktor-spa/_latestVersion)
 
 If using Gradle Kotlin DSL:
 ```kotlin
 repositories {
-    maven(url = "https://jitpack.io")
+    maven(url = "https://dl.bintray.com/lamba92/com.github.lamba92")
+    // jcenter() will soon be available
 }
 ...
 dependencies {
     implementation("com.github.lamba92", "ktor-spa", "{latest_version}")
 }
-```
-For Maven:
-```xml
-<repositories>
-   <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-   </repository>
-</repositories>
-...
-<dependency> 	 
-   <groupId>com.github.Lamba92</groupId>
-   <artifactId>ktor-spa</artifactId>
-   <version>{latest_version}</version>
-</dependency>
 ```

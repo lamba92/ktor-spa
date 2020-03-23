@@ -51,8 +51,7 @@ The feature intercepts all 404s not intercepted by the router and instead of res
 If using Gradle Kotlin DSL:
 ```kotlin
 repositories {
-    maven(url = "https://dl.bintray.com/lamba92/com.github.lamba92")
-    // jcenter() will soon be available
+    jcenter()
 }
 ...
 dependencies {

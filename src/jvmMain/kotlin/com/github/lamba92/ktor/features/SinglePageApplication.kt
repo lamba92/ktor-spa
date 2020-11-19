@@ -73,10 +73,11 @@ class SinglePageApplication(private val configuration: Configuration) {
                     || requestUrl.startsWith("/${configuration.spaRoute}")))
         }
         val is404 by lazy {
-            if (message is HttpStatusCodeContent)
-                message.status == HttpStatusCode.NotFound
-            else
-                false
+            when(message) {
+                is HttpStatusCode -> message == HttpStatusCode.NotFound
+                is HttpStatusCodeContent -> message.status == HttpStatusCode.NotFound
+                else -> false
+            }
         }
         val acceptsHtml by lazy {
             call.request.acceptItems().any {
